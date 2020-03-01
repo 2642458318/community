@@ -1,0 +1,8 @@
+server:
+  port: 9527
+github:
+      client:
+             id: "Iv1.f0ce44baaa88996e"
+             secret: "90fcb9a472305727d41953e99e8a2897b466b9a5"
+      Redirect:
+              url: "http://localhost:9527/callback"
