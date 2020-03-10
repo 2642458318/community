@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.www.community.dao.mapper.temp.UserMapper">
+    <insert id="addUser" parameterType="com.www.community.model.User">
+        insert into user (name, account_id, token, gmt_create, gmt_modified,avatar_url)
+            value (#{name}, #{accountId}, #{token}, #{gmtCreat}, #{gmtModified},#{avatarUrl})
+    </insert>
+    <select id="findByToken" parameterType="String" resultType="com.www.community.model.User">
+        select
+            id,
+            name,
+            account_id,
+            token,
+            gmt_create,
+            gmt_modified,
+            avatar_url
+        from user
+        where token = #{token};
+    </select>
+    <select id="findById" parameterType="int" resultType="com.www.community.model.User">
+        select
+            id,
+            name,
+            account_id,
+            token,
+            gmt_create,
+            gmt_modified,
+            avatar_url
+        from user
+        where id = #{id};
+    </select>
+</mapper>
+    

@@ -7,3 +7,6 @@
 2.请求github获取token，access_token（携带code），github会返回token
 3.调用github（user接口携带token）如果正确，github会返回用户信息
 4.存入数据、更新登录状态
+##cooking跟session
+session是账号密码，cooking是银行卡
+cooking是不能跨域的

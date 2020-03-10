@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.www.community.dao.mapper.temp.TempInsuerMapper">
+
+    <insert id="addTemp" parameterType="com.www.community.model.entity.temp.TempInsurEntity">
+        insert into temp_insur (
+            temp_id, user_code, temp_type, product_id, content, add_time, status, amount, product_name, temp_code, insure_dateFrom, insure_dateEnd, insured_name, insure_code
+        ) values (
+            #{tempId},
+            #{userCode},
+            #{tempType},
+            #{productId},
+            #{content},
+            #{addTime},
+            #{status},
+            #{amount},
+            #{productName},
+            #{tempCode},
+            #{insureDateFrom},
+            #{insureDateEnd},
+            #{insureName},
+            #{insureCode}
+        )
+    </insert>
+    <select id="selectTempInsuer" resultType="com.www.community.model.entity.temp.TempInsurEntity">
+        select
+            temp_id,
+            user_code,
+            temp_type,
+            product_id,
+            content,
+            add_time,
+            status,
+            amount,
+            product_name,
+            temp_code,
+            insure_dateFrom,
+            insure_dateEnd,
+            insured_name,
+            insure_code
+        from temp_insur
+        where status=1
+        <if test="null != tempId and ''!= tempId">
+            and temp_id=#{tempId}
+        </if>
+        <if test="null!=insureCode and''!=insureCode">
+            and insure_code =#{insureCode}
+        </if>
+        <if test="null!=tempCode and ''!=tempCode ">
+            and temp_code=#{tempCode}
+        </if>
+        order by add_time desc
+    </select>
+    <delete id="deleteAppVersion">
+        delete from temp_insur where temp_id=#{tempId}
+    </delete>
+
+    <update id="updateAppVersion" parameterType="com.www.community.model.entity.temp.TempInsurEntity">
+        update temp_insur
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="null !=  userCode and ''!= userCode">
+                user_code=#{userCode},
+            </if>
+            <if test="null !=  insureCode and ''!= insureCode">
+                insure_code=#{insureCode},
+            </if>
+            <if test="null != tempType and ''!=tempType">
+                temp_type= #{tempType},
+            </if>
+            <if test="null != productId and ''!=productId">
+                product_id=#{productId},
+            </if>
+            <if test="null != content and ''!=content">
+                content=#{content},
+            </if>
+            <if test="null != insureDateFrom">
+                insure_dateFrom=#{insureDateFrom},
+            </if>
+            <if test="null != insureDateEnd ">
+                insure_dateEnd=#{insureDateEnd},
+            </if>
+            <if test="null != addTime ">
+                add_time=#{addTime},
+            </if>
+            <if test="null != amount and ''!=amount">
+                amount=#{amount},
+            </if>
+            <if test="null != productName and ''!=productName">
+                product_name=#{productName},
+            </if>
+            <if test="null != insuredName and ''!=insuredName">
+                insured_name=#{insureName},
+            </if>
+            <if test="null != status and ''!=status">
+                status=#{status}
+            </if>
+        </trim>
+        where temp_id = #{tempId}
+    </update>
+</mapper>
+    
