@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.www.community.dao.mapper.temp.ItemMapper">
+    <resultMap id="item" type="com.www.community.model.entity.temp.ItemEntity">
+        <result column="item_id" jdbcType="VARCHAR" property="itemId"/>
+        <result column="img_url" jdbcType="VARCHAR" property="imgUrl"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="price" jdbcType="VARCHAR" property="price"/>
+        <result column="item_type" jdbcType="VARCHAR" property="itemType"/>
+        <result column="quantity" jdbcType="BIGINT" property="quantity"/>
+        <collection property="itemSkuEntityList" ofType="com.www.community.model.entity.temp.ItemSkuEntity"
+                    javaType="java.util.List" select="getSkuByItemId"
+                    column="{itemId=item_Id}">
+
+            <!--{itemId=item_Id,quantity=quantity} 要查询的列 必须在父查询的select字段中-->   <!--property字段对应的itemSkus必须在结果集中List的字段名 如：private List<ItemSku> itemSkus;-->
+            <result column="sku_id" jdbcType="VARCHAR" property="skuId"/>
+            <result column="sku_price" jdbcType="VARCHAR" property="skuPrice"/>
+            <result column="sku_unique_code" jdbcType="VARCHAR" property="skuUniqueCode"/>
+            <result column="quantity" jdbcType="BIGINT" property="quantity"/>
+        </collection>
+    </resultMap>
+    <select id="getSkuByItemId" parameterType="map" resultType="map">
+        select
+            s2.sku_id,
+            s2.sku_price,
+            s2.sku_unique_code,
+            s2.quantity
+        from item_sku s2
+        where
+            s2.item_id = #{itemId}
+        ORDER BY s2.sku_id
+    </select>
+    <select id="selectItemAndSku" resultMap="item" parameterType="map">
+        SELECT
+        s1.item_id,
+        s1.title,
+        s1.img_url,
+        s1.item_type,
+        s1.price,
+        s1.quantity
+        FROM
+        item s1
+        <where>
+            <if test="title != null and title != ''">
+                AND s1.title LIKE '%${title}%'
+            </if>
+            <if test="itemId != null and itemId != ''">
+                AND s1.item_id = '${itemId}'
+            </if>
+        </where>
+        order by item_id asc
+    </select>
+</mapper>
+    

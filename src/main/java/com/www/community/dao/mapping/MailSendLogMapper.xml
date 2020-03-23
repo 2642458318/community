@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.www.community.dao.mapper.mail.MailSendLogMapper">
+
+    <!--修改发送状态-->
+    <update id="updateMailSendLogStatus">
+        update mail_send_log
+        set status = #{status}
+        where msgId = #{msgId}
+    </update>
+    <!--插入发送数据-->
+    <insert id="insert" parameterType="com.www.community.model.entity.mail.MailSendLog">
+        insert into mail_send_log (msgId, empId, routekey, exchange, tryTime, createTime)
+        values (#{msgId}, #{empId}, #{routekey}, #{exchange}, #{tryTime}, #{createTime})
+    </insert>
+    <!--查询发送状态-->
+    <select id="getMailSendLogByStatus" resultType="com.www.community.model.entity.mail.MailSendLog">
+        select
+            msgId,
+            empId,
+            status,
+            routekey,
+            exchange,
+            count,
+            tryTime,
+            createTime,
+            updateTime
+        from mail_send_log
+        where status = 0 and tryTime &lt; sysdate()
+    </select>
+    <!--修改发送次数-->
+    <update id="updateCount">
+        update mail_send_log
+        set count = count + 1, updateTime = #{date}
+        where msgId = #{msgId}
+    </update>
+</mapper>
+    

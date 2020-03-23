@@ -13,6 +13,15 @@ spring:
          url: "jdbc:mysql:///vue?characterEncoding=UTF-8"
          username: root
          password: root
+       rabbitmq:
+         username: guest
+         password: guest
+         host: 10.10.32.85
+         port: 5672
+         #开启confirms回调
+         publisher-confirms: true
+         #开启 returnedMessage回调
+         publisher-returns: true
 mybatis:
   mapper-locations: classpath:com/www/community/dao/mapping/*.xml
   configuration:
@@ -21,3 +30,9 @@ mybatis:
 ## 线上需要关闭，配置为true是为了在本地环境执行生成swagger文档
 swagger:
   enable: true
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+  PageRowBounds: true

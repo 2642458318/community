@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.www.community.dao.mapper.news.NewsCategoryMapper">
+    <!--根据id判断是否存在此标签-->
+    <select id="selectIsCategoryCode" resultType="java.lang.String">
+        select category_code
+        from news_category
+        where category_code = #{categoryCode}
+    </select>
+
+    <!--添加资讯分类-->
+    <insert id="addCategory" useGeneratedKeys="true" keyProperty="categoryId">
+        insert into news_category (category_name, sort_id, parent_id, level, user_code, category_code)
+        values (#{addNewsCategoryParam.categoryName},
+                #{addNewsCategoryParam.sortId},
+                #{addNewsCategoryParam.parentId},
+                #{addNewsCategoryParam.level},
+                #{addNewsCategoryParam.userCode},
+                #{addNewsCategoryParam.categoryCode});
+    </insert>
+    <!--查询资讯分类-->
+    <select id="selectNewsCategoryByCondition" resultType="com.www.community.model.entity.news.NewsCategoryEntity">
+        select category_id AS categoryId,
+        category_name AS categoryName,
+        sort_id AS sortId,
+        parent_id AS parentId,
+        `level` AS level,
+        user_code AS userCode,
+        category_code AS categoryCode,
+        update_time AS updateTime,
+        yx_bz AS yxBz
+        FROM news_category
+        WHERE yx_bz = 1
+        <if test="parentId !=null">
+            AND parent_id = #{parentId}
+        </if>
+        <if test="categoryName != null">
+            AND category_name LIKE concat("%",#{categoryName},"%")
+        </if>
+        ORDER BY sort_id ASC
+    </select>
+    <!--删除咨询分类（逻辑删除）-->
+    <update id="deleteCategory">
+        update news_category
+        set yx_bz = 0
+        where category_id = #{categoryId}
+    </update>
+    <!--资讯分类修改-->
+    <update id="updateNewsCategory">
+        update news_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="alterNewsCategoryParam.categoryName != null">
+                category_name=#{alterNewsCategoryParam.categoryName},
+            </if>
+            <if test="alterNewsCategoryParam.sortId != null">
+                sort_id= #{alterNewsCategoryParam.sortId},
+            </if>
+            <if test="alterNewsCategoryParam.parentId != null">
+                parent_id=#{alterNewsCategoryParam.parentId},
+            </if>
+            <if test="alterNewsCategoryParam.userCode != null">
+                user_code=#{alterNewsCategoryParam.userCode},
+            </if>
+            <if test="alterNewsCategoryParam.yxBz != null">
+                yx_bz=#{alterNewsCategoryParam.yxBz},
+            </if>
+            <if test="alterNewsCategoryParam.categoryCode != null">
+                category_code=#{alterNewsCategoryParam.categoryCode}
+            </if>
+        </trim>
+        where category_id=#{alterNewsCategoryParam.categoryId}
+    </update>
+    <!--查询资讯（分级，根据父级查子级）-->
+    <resultMap id="recursionMenuMap" type="com.www.community.model.entity.news.NewsCategoryEntity">
+        <id property="category_id" column="categoryId"/>
+        <result property="category_name" column="categoryName"/>
+        <collection property="subLevelList" ofType="com.www.community.model.entity.news.NewsCategoryEntity"
+                    column="categoryId=category_id" select="findMenuByParentId"/>
+    </resultMap>
+    <select id="findAllRecursion" resultMap="recursionMenuMap">
+        select
+            category_id,
+            category_name
+        from news_category
+        where yx_bz = 1 and parent_id = 0 or parent_id = null
+        order by category_id asc
+    </select>
+    <select id="findMenuByParentId" resultType="com.www.community.model.entity.news.NewsCategoryEntity">
+        select
+            n.category_id,
+            n.category_name,
+            n.parent_id
+        from news_category as n
+        where yx_bz = 1 and parent_id = #{categoryId}
+        ORDER BY n.category_id ASC
+    </select>
+</mapper>
+    

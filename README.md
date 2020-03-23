@@ -10,3 +10,6 @@
 ##cooking跟session
 session是账号密码，cooking是银行卡
 cooking是不能跨域的
+
+##vhr
+https://github.com/lenve/vhr

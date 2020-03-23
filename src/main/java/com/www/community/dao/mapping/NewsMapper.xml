@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.www.community.model.entity.news.NewsEntity">
+    <!--添加新闻-->
+    <insert id="insertNews" useGeneratedKeys="true" keyProperty="newsId" parameterType="com.www.community.model.entity.news.NewsEntity">
+        INSERT INTO news_item (
+            `news_title`,
+            `news_content`,
+            `img`,
+            `status`,
+            `publish_date`,
+            `province_name`,
+            `province_no`,
+            `user_code`,
+            `yx_bz`,
+            `news_brief`,
+            client,
+            `short_title`
+        ) VALUES (
+            #{news.newsTitle},
+            #{news.newsContent},
+            #{news.img},
+            #{news.status},
+            #{news.publishDate},
+            #{news.provinceName},
+            #{news.provinceNo},
+            #{news.userCode},
+            1,
+            #{news.newsBrief},
+            #{news.client},
+            #{news.shortTitle}
+        )
+    </insert>
+
+</mapper>
+    
