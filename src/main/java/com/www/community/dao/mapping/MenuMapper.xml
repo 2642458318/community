@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.www.community.dao.mapper.hr.MenuMapper">
+    <resultMap id="BaseResultMap" type="com.www.community.model.entity.hr.Menu">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="path" property="path" jdbcType="VARCHAR"/>
+        <result column="component" property="component" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="iconCls" property="iconcls" jdbcType="VARCHAR"/>
+        <result column="keepAlive" property="keepalive" jdbcType="BIT"/>
+        <result column="requireAuth" property="requireauth" jdbcType="BIT"/>
+        <result column="parentId" property="parentid" jdbcType="INTEGER"/>
+        <result column="enabled" property="enabled" jdbcType="BIT"/>
+    </resultMap>
+
+    <resultMap id="MenuWithRole" type="com.www.community.model.entity.hr.Menu" extends="BaseResultMap">
+        <collection property="roles" ofType="com.www.community.model.entity.hr.Role">
+            <id column="rid" property="id"/>
+            <result column="rname" property="name"/>
+            <result column="rnameZh" property="nameZh"/>
+        </collection>
+    </resultMap>
+    <!--获取所有菜单数据-->
+    <select id="getAllMenuWithRole" resultMap="MenuWithRole">
+        SELECT
+            m.id,
+            m.url,
+            m.`path`,
+            m.`component`,
+            m.`name`,
+            m.`iconCls`,
+            m.`keepAlive`,
+            m.`requireAuth`,
+            m.`parentId`,
+            m.`enabled`,
+            r.`id`   AS rId,
+            r.`name` AS rName
+        FROM (
+                menu m LEFT JOIN menu_role mr ON m.`id` = mr.`mid`)
+            LEFT JOIN role r ON mr.`rid` = r.`id`
+        ORDER BY m.`id` ASC
+    </select>
+</mapper>

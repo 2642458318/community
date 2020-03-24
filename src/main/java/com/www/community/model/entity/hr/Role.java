@@ -5,7 +5,7 @@ public class Role {
 
     private String name;
 
-    private String namezh;
+    private String nameZh;
 
     public Integer getId() {
         return id;
@@ -24,10 +24,10 @@ public class Role {
     }
 
     public String getNamezh() {
-        return namezh;
+        return nameZh;
     }
 
     public void setNamezh(String namezh) {
-        this.namezh = namezh == null ? null : namezh.trim();
+        this.nameZh = namezh == null ? null : namezh.trim();
     }
 }

@@ -4,7 +4,7 @@
     <resultMap id="BaseResultMap" type="com.www.community.model.entity.hr.Hr">
         <id column="id" property="id" jdbcType="INTEGER"/>
         <result column="name" property="name" jdbcType="VARCHAR"/>
-        <result column="phone" property="phone" jdbcType="CHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
         <result column="telephone" property="telephone" jdbcType="VARCHAR"/>
         <result column="address" property="address" jdbcType="VARCHAR"/>
         <result column="enabled" property="enabled" jdbcType="BIT"/>
@@ -13,6 +13,7 @@
         <result column="userface" property="userface" jdbcType="VARCHAR"/>
         <result column="remark" property="remark" jdbcType="VARCHAR"/>
     </resultMap>
+    <!--根据用户名查询用户信息-->
     <select id="loadUserByUsername" resultMap="BaseResultMap">
         select
             id,
@@ -27,6 +28,17 @@
             remark
         from hr
         where name = #{username}
+    </select>
+    <!--根据id查询角色-->
+    <select id="getHrRolesById" resultType="com.www.community.model.entity.hr.Role">
+        SELECT
+            r.`id`,
+            r.`name`,
+            r.`nameZh`
+        FROM role r
+            LEFT JOIN hr_role hrr
+                ON r.`id` = hrr.rid
+        WHERE hrr.hrid = #{id}
     </select>
 </mapper>
     

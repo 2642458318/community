@@ -1,12 +1,15 @@
 package com.www.community.model.entity.hr;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
- * 用户类
+ * 用户类,UserDetails规范
  */
 public class Hr implements UserDetails {
     private Integer id;
@@ -28,6 +31,16 @@ public class Hr implements UserDetails {
     private String userface;
 
     private String remark;
+
+    private List<Role> roles;
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
 
     public Integer getId() {
         return id;
@@ -73,6 +86,11 @@ public class Hr implements UserDetails {
         this.enabled = enabled;
     }
 
+    /**
+     * 用户名
+     *
+     * @return
+     */
     public String getUsername() {
         return username;
     }
@@ -106,7 +124,8 @@ public class Hr implements UserDetails {
     }
 
     /**
-     * 账户是否过期
+     * 账户是否未过期
+     *
      * @return
      */
     @Override
@@ -115,7 +134,8 @@ public class Hr implements UserDetails {
     }
 
     /**
-     * 账户是否被锁定
+     * 账户是否未被锁定
+     *
      * @return
      */
     @Override
@@ -124,7 +144,8 @@ public class Hr implements UserDetails {
     }
 
     /**
-     * 密码是否没有过期
+     * 密码是否未过期
+     *
      * @return
      */
     @Override
@@ -132,6 +153,10 @@ public class Hr implements UserDetails {
         return true;
     }
 
+    /**
+     * 账户是否可用
+     * @return
+     */
     @Override
     public boolean isEnabled() {
         return enabled;
@@ -140,11 +165,17 @@ public class Hr implements UserDetails {
 
     /**
      * 集合里面返回角色
+     * 作用：用来获取当前用户所具有的角色
+     *
      * @return
      */
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>(roles.size());
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
+        return authorities;
     }
 }

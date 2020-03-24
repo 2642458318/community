@@ -13,3 +13,9 @@ cooking是不能跨域的
 
 ##vhr
 https://github.com/lenve/vhr
+
+##idea快捷键
+Ctrl+E 最近的文件
+Ctrl+H 查看点中的类的继承关系
+Ctrl+P 可以显示参数信息
+Alt+Q 可以看到当前方法的声明

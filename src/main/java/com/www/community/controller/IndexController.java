@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
-@Controller
+//@Controller
 public class IndexController {
 
     @Autowired
@@ -22,7 +22,7 @@ public class IndexController {
     @Autowired
     private QuestionService questionService;
 
-    @GetMapping("/")
+    //@GetMapping("/")
     public String index(HttpServletRequest request,
                         Model model,
                         @RequestParam(name = "page",defaultValue = "1") Integer page,

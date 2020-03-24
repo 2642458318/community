@@ -16,7 +16,7 @@ public class HrSeriviceImpl implements HrService, UserDetailsService {
     HrMapper hrMapper;
 
     /**
-     * 根据用户名加载user对象
+     * 根据用户名加载hr对象
      *
      * @param
      * @return
@@ -28,6 +28,8 @@ public class HrSeriviceImpl implements HrService, UserDetailsService {
         if (hr == null) {
             throw new UsernameNotFoundException("用户名不存在");
         }
+        hr.setRoles(hrMapper.getHrRolesById(hr.getId()));
+        //返回hr对象,不需要管密码对不对，security自己进行密码比较
         return hr;
     }
 }

@@ -3,19 +3,21 @@ package com.www.community.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.www.community.model.entity.hr.Hr;
 import com.www.community.model.param.resp.RespBean;
-import com.www.community.service.local.hr.HrService;
 import com.www.community.service.local.hr.impl.HrSeriviceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.*;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -31,6 +33,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     HrSeriviceImpl hrService;
 
+    @Autowired
+    CustomFilterInvocationSecurityMetadataSource myFilterConfig;
+
+    @Autowired
+    CustomUrlDecisionManager myDecisionManager;
+
     @Bean
     PasswordEncoder passwordEncoder() {
         //SHA-256 +随机盐+密钥对密码进行加密
@@ -42,11 +50,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(hrService);//不能是接口
     }
 
+    /**
+     * 如果访问login页面，不用经过spring security拦截
+     * @param web
+     * @throws Exception
+     */
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/login");
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 //所有请求认证之后才可以访问
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O object) {
+                        object.setAccessDecisionManager(myDecisionManager);
+                        object.setSecurityMetadataSource(myFilterConfig);
+                        return object;
+                    }
+                })
                 .and()
                 //表单登录
                 .formLogin()
